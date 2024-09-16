@@ -100,7 +100,7 @@ export default function SwipeableRow<TDataItem extends DataItem>({
   onDelete,
   onSwipeOpen,
   renderRowItem,
-  rowItemHeight = 70,
+  rowItemHeight,
 }: SwipeableRowProps<TDataItem>) {
   const swipeableRowRef = useRef<SwipeableMethods>(null);
 

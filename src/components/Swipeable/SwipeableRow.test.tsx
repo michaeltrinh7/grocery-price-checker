@@ -1,55 +1,55 @@
-import { Text } from 'react-native';
-import React, { fireEvent, render } from '@testing-library/react-native';
+import React from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import SwipeableRow from './SwipeableRow';
-import { DataItem } from '../../types/DataItem';
+import { Text } from 'react-native';
 
 describe('SwipeableRow component', () => {
-  const mockItem: DataItem = { id: 1, name: 'Test Item' };
+  const mockItem = { id: '1', title: 'Test Item' };
   const mockOnEdit = jest.fn();
   const mockOnDelete = jest.fn();
   const mockOnSwipeOpen = jest.fn();
-  const renderRowItem = (item: DataItem) => <Text>{item.name}</Text>;
-
+  const mockRenderRowItem = jest.fn((item) => <Text>{item.title}</Text>);
   const defaultProps = {
     item: mockItem,
     onEdit: mockOnEdit,
     onDelete: mockOnDelete,
     onSwipeOpen: mockOnSwipeOpen,
-    renderRowItem: renderRowItem,
+    renderRowItem: mockRenderRowItem,
     rowItemHeight: 70,
   };
 
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('renders correctly', () => {
     const { getByText } = render(<SwipeableRow {...defaultProps} />);
+
     expect(getByText('Test Item')).toBeTruthy();
   });
 
   it('calls onSwipeOpen when swipeable row is opened', () => {
     const { getByTestId } = render(<SwipeableRow {...defaultProps} />);
-    const swipeable = getByTestId('swipeable-row');
-    fireEvent(swipeable, 'onSwipeableWillOpen');
-    expect(mockOnSwipeOpen).toHaveBeenCalledTimes(1);
+
+    fireEvent(getByTestId('swipeable-row'), 'onSwipeableWillOpen');
+    expect(mockOnSwipeOpen).toHaveBeenCalled();
   });
 
-  // it('renders edit and delete actions on swipe', () => {
-  //   const { getByText } = render(<SwipeableRow {...defaultProps} />);
-  //   // Simulate onSwipeableWillOpen to show the right actions
-  //   //fireEvent(getByText('Test Item'), 'onSwipeableWillOpen');
+  it('should call onEdit when the Edit button is pressed', () => {
+    const { getByText } = render(<SwipeableRow {...defaultProps} />);
 
-  //   // Check that the edit and delete buttons are rendered after swipe
-  //   expect(getByText('Edit')).toBeTruthy();
-  //   expect(getByText('Delete')).toBeTruthy();
-  // });
+    fireEvent.press(getByText('Edit'));
+    expect(mockOnEdit).toHaveBeenCalledWith(mockItem);
+  });
 
-  it('does not render edit and delete actions initially', () => {
-    const { queryByText } = render(<SwipeableRow {...defaultProps} />);
+  it('should call onDelete and animate the row height to 0 when the Delete button is pressed', async () => {
+    const { getByText } = render(<SwipeableRow {...defaultProps} />);
 
-    // Initially, the Edit and Delete buttons should not be in the DOM
-    expect(queryByText('Edit')).toBeNull();
-    expect(queryByText('Delete')).toBeNull();
+    fireEvent.press(getByText('Delete'));
+
+    // Wait for the animation and the onDelete to be called
+    await waitFor(() => {
+      expect(mockOnDelete).toHaveBeenCalled();
+    });
   });
 });

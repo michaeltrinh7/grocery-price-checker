@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "test-watch-all": "jest --watchAll",
-    "test": "jest"
+    "test": "jest",
+    "test-one": "jest src/components/Swipeable/SwipeableRow.test.tsx"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
@@ -20,7 +21,7 @@
     "expo": "~51.0.28",
     "expo-status-bar": "~1.12.1",
     "react": "18.3.1",
-    "react-dom": "18.2.0",
+    "react-dom": "18.3.1",
     "react-hook-form": "^7.53.0",
     "react-native": "0.75.3",
     "react-native-reanimated": "^3.10.1",
@@ -30,7 +31,7 @@
     "@eslint/js": "^9.10.0",
     "@testing-library/react-native": "^12.7.2",
     "@types/jest": "^29.5.13",
-    "@types/react": "~18.2.45",
+    "@types/react": "18.3.6",
     "@typescript-eslint/eslint-plugin": "^8.5.0",
     "@typescript-eslint/parser": "^8.5.0",
     "eslint": "^9.10.0",
@@ -46,6 +47,12 @@
   "private": true,
   "jest": {
     "preset": "jest-expo",
-    "verbose": true
+    "bail": 1,
+    "verbose": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./src/**"
+    ],
+    "coverageDirectory": "./coverage"
   }
 }
