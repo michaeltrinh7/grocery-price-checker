@@ -13,14 +13,20 @@ jest.mock('react-hook-form', () => ({
       ref: jest.fn(),
     },
   }),
-  get: (obj: any, path: string) => {
+  get: <T extends Record<string, unknown>, K = unknown>(
+    obj: T,
+    path: string
+  ): K | undefined => {
     const pathArray = path.split('.');
-    return pathArray.reduce(
-      (acc, key) => (acc && acc[key] !== 'undefined' ? acc[key] : undefined),
-      obj
-    );
+    return pathArray.reduce((acc: unknown, key: string) => {
+      if (acc && typeof acc === 'object' && key in acc) {
+        return (acc as Record<string, unknown>)[key];
+      }
+      return undefined;
+    }, obj) as K | undefined;
   },
 }));
+
 describe('FormTextInput', () => {
   const mockControl = {
     register: jest.fn(),

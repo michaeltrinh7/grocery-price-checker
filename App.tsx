@@ -7,6 +7,8 @@ import { NavigationProps, ScreenName, ScreenParamList } from './src/ScreenInfo';
 import GroceryItemList from './src/screens/GroceryItemList';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { GroceryDataRow } from './src/screens/GroceryItemRow';
+import { Ionicons } from '@expo/vector-icons';
+
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
@@ -25,11 +27,15 @@ const DrawerNavigator = () => {
                   screenTitle: `Add new grocery item`,
                 });
               }}
-              iconName={'add'}
+              renderIcon={() => (
+                <Ionicons
+                  name={'add'}
+                  size={32}
+                />
+              )}
             ></ButtonIcon>
           ),
         })}
-        //component={GroceryItemList}
       >
         {(props) => (
           <GroceryItemList

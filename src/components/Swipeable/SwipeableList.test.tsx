@@ -42,7 +42,6 @@ describe('GroceryItemList', () => {
   });
 
   it('should render items correctly', async () => {
-    // Override DATA with mock data in the test
     render(<GroceryItemList {...defaultProps} />);
 
     // Ensure items are rendered

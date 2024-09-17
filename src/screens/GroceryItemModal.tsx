@@ -5,7 +5,7 @@ import { NavigationProps, ScreenName } from '../ScreenInfo';
 import FormTextInput from '../components/FormTextInput';
 import TouchableText from '../components/Touchable/TouchableText';
 
-type FormInputs = {
+export type FormInputs = {
   groceryName: string;
 };
 export default function GroceryItemModal({

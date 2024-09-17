@@ -11,6 +11,7 @@ import {
   RegisterOptions,
   FieldErrors,
   get,
+  Control,
 } from 'react-hook-form';
 import React from 'react';
 
@@ -42,7 +43,7 @@ const FormTextInput = <TFieldErrors extends FieldErrors>(
     //formState: { touchedFields, dirtyFields },
   } = useController({
     name: props.name,
-    control: props.control,
+    control: props.control as unknown as Control<FieldValues>,
     rules: props.rules,
   });
 

@@ -1,24 +1,19 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function TouchableIcon({
-  iconName,
   onPress,
+  renderIcon,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  iconName: any;
   onPress?: () => void;
+  renderIcon: () => React.ReactNode;
 }) {
   return (
     <TouchableOpacity
       style={styles.buttonIcon}
       onPress={onPress}
     >
-      <Ionicons
-        name={iconName}
-        size={32}
-      />
+      {renderIcon()}
     </TouchableOpacity>
   );
 }

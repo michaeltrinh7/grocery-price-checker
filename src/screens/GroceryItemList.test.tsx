@@ -42,9 +42,6 @@ describe('GroceryItemList', () => {
   });
 
   it('should render items correctly', async () => {
-    // Mock the global DATA variable to use mock data
-    (global as any).DATA = mockData;
-
     render(<GroceryItemList {...defaultProps} />);
 
     // Ensure items are rendered
@@ -95,9 +92,6 @@ describe('GroceryItemList', () => {
   });
 
   it('should delete an item', async () => {
-    // Mock the global DATA variable to use mock data
-    (global as any).DATA = mockData;
-
     render(<GroceryItemList {...defaultProps} />);
 
     // Simulate deleting the item
@@ -110,9 +104,6 @@ describe('GroceryItemList', () => {
   });
 
   it('should filter items based on filter text', async () => {
-    // Mock the global DATA variable to use mock data
-    (global as any).DATA = mockData;
-
     render(<GroceryItemList {...defaultProps} />);
 
     // Simulate filtering
