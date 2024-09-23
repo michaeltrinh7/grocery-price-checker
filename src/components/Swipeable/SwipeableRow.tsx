@@ -1,96 +1,69 @@
 import React, { useRef } from 'react';
-import { StyleSheet, Text, View, I18nManager } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import {
+  StyleSheet,
+  Text,
+  View,
+  I18nManager,
+  Animated as RNAnimated,
+} from 'react-native';
+import { RectButton, Swipeable } from 'react-native-gesture-handler';
 import Animated, {
-  SharedValue,
-  interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import Swipeable, {
-  SwipeableMethods,
-} from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { DataItem } from '../../types/DataItem';
 
 interface SwipeableRowProps<TDataItem extends DataItem> {
   item: TDataItem;
   onEdit: (item: TDataItem) => void;
   onDelete: () => void;
-  onSwipeOpen: (swipeableRowRef: SwipeableMethods | null) => void;
+  onSwipeOpen: (swipeableRowRef: Swipeable | null) => void;
   renderRowItem: (data: TDataItem) => React.ReactNode;
   rowItemHeight: number;
 }
 
-interface RightActionProps {
-  text: string;
-  color: string;
-  x: number;
-  progress: SharedValue<number>;
-  totalWidth: number;
-  swipeableRef: React.RefObject<SwipeableMethods>;
-}
-
-const RightAction = ({
-  text,
-  color,
-  x,
-  progress,
-  totalWidth,
-  swipeableRef,
-  onPress,
-}: RightActionProps & { onPress: () => void }) => {
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: interpolate(progress.value, [0, -totalWidth], [x, 0]),
-      },
-    ],
-  }));
+const renderRightAction = (
+  text: string,
+  color: string,
+  x: number,
+  progress: RNAnimated.AnimatedInterpolation<number>,
+  onPress: () => void
+) => {
+  const trans = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [x, 0],
+  });
   const pressHandler = () => {
-    swipeableRef.current?.close();
     onPress();
   };
 
   return (
-    <Animated.View style={[styles.rightActionView, animatedStyle]}>
+    <RNAnimated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
       <RectButton
         style={[styles.rightAction, { backgroundColor: color }]}
         onPress={pressHandler}
       >
         <Text style={styles.actionText}>{text}</Text>
       </RectButton>
-    </Animated.View>
+    </RNAnimated.View>
   );
 };
-
 const renderRightActions = (
-  _: SharedValue<number>,
-  progress: SharedValue<number>,
-  swipeableRef: React.RefObject<SwipeableMethods>,
+  progress: RNAnimated.AnimatedInterpolation<number>,
+  _dragAnimatedValue: RNAnimated.AnimatedInterpolation<number>,
   onEdit: () => void,
   onDelete: () => void
 ) => (
-  <View style={styles.rightActionsView}>
-    <RightAction
-      text='Edit'
-      color='#ffab00'
-      x={64}
-      progress={progress}
-      totalWidth={192}
-      swipeableRef={swipeableRef}
-      onPress={onEdit}
-    />
-    <RightAction
-      text='Delete'
-      color='#dd2c00'
-      x={64}
-      progress={progress}
-      totalWidth={192}
-      swipeableRef={swipeableRef}
-      onPress={onDelete}
-    />
+  <View
+    style={{
+      width: 192,
+      flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    }}
+  >
+    {renderRightAction('Edit', '#ffab00', 64, progress, onEdit)}
+    {renderRightAction('Delete', '#dd2c00', 64, progress, onDelete)}
   </View>
 );
 
@@ -100,9 +73,9 @@ export default function SwipeableRow<TDataItem extends DataItem>({
   onDelete,
   onSwipeOpen,
   renderRowItem,
-  rowItemHeight,
+  rowItemHeight = 70,
 }: SwipeableRowProps<TDataItem>) {
-  const swipeableRowRef = useRef<SwipeableMethods>(null);
+  const swipeableRowRef = useRef<Swipeable>(null);
 
   const itemHeight = useSharedValue(rowItemHeight);
   const opacity = useSharedValue(1);
@@ -130,11 +103,10 @@ export default function SwipeableRow<TDataItem extends DataItem>({
       enableTrackpadTwoFingerGesture
       leftThreshold={30}
       rightThreshold={40}
-      renderRightActions={(_, progress) =>
+      renderRightActions={(progress, dragAnimatedValue) =>
         renderRightActions(
-          _,
           progress,
-          swipeableRowRef,
+          dragAnimatedValue,
           () => onEdit(item),
           handleDelete
         )
