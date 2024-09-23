@@ -107,8 +107,14 @@ export default function SwipeableRow<TDataItem extends DataItem>({
         renderRightActions(
           progress,
           dragAnimatedValue,
-          () => onEdit(item),
-          handleDelete
+          () => {
+            swipeableRowRef.current?.close();
+            onEdit(item);
+          },
+          () => {
+            swipeableRowRef.current?.close();
+            handleDelete();
+          }
         )
       }
       onSwipeableWillOpen={() => onSwipeOpen(swipeableRowRef.current)}

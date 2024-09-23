@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
-import { SwipeableMethods } from 'react-native-gesture-handler/lib/typescript/components/ReanimatedSwipeable';
+import { Swipeable } from 'react-native-gesture-handler';
 import SwipeableRow from './SwipeableRow';
 import SwipeableListHeader from './SwipeableListHeader';
 import { DataItem } from '../../types/DataItem';
@@ -20,10 +20,10 @@ export default function SwipeableList<TDataItem extends DataItem>({
   renderRowItem: (data: TDataItem) => React.ReactNode;
   rowItemHeight: number;
 }) {
-  const currentlyOpenRow = useRef<SwipeableMethods | null>(null); // Track the currently open swipeable row
+  const currentlyOpenRow = useRef<Swipeable | null>(null); // Track the currently open swipeable row
 
   // Close the previous row when a new row is swiped
-  const handleSwipeOpen = (swipeableRef: SwipeableMethods | null) => {
+  const handleSwipeOpen = (swipeableRef: Swipeable | null) => {
     if (currentlyOpenRow.current && currentlyOpenRow.current !== swipeableRef) {
       currentlyOpenRow.current.close(); // Close the previously opened row
     }
