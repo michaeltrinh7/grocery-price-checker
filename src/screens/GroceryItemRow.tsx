@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, I18nManager } from 'react-native';
 
 import { RectButton } from 'react-native-gesture-handler';
-import { DataItem } from '../types/DataItem';
+import { DataItem, GroceryItem } from '../types/DataItem';
 
 //  To toggle LTR/RTL change to `true`
 I18nManager.allowRTL(false);
@@ -12,7 +12,7 @@ export interface GroceryDataRow extends DataItem {
   message: string;
 }
 
-export default function GroceryItemRow({ item }: { item: GroceryDataRow }) {
+export default function GroceryItemRow({ item }: { item: GroceryItem }) {
   return (
     <RectButton
       style={styles.rectButton}

@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
-import SwipeableRow from './SwipeableRow';
-import SwipeableListHeader from './SwipeableListHeader';
-import { DataItem } from '../../types/DataItem';
+import SwipeableRow from '../SwipeableRow/SwipeableRow';
+import SwipeableListHeader from '../SwipeableListHeader';
+import { DataItem } from '../../../types/DataItem';
+import { useSwipeableRow } from './useSwipeableRow';
 
 export default function SwipeableList<TDataItem extends DataItem>({
   handleItemEdit,
@@ -16,19 +16,11 @@ export default function SwipeableList<TDataItem extends DataItem>({
   handleItemEdit: (item: TDataItem) => void;
   handleItemDelete: (id: number) => void;
   handleFilterChange: (text: string) => void;
-  items: TDataItem[];
+  items: TDataItem[] | undefined;
   renderRowItem: (data: TDataItem) => React.ReactNode;
   rowItemHeight: number;
 }) {
-  const currentlyOpenRow = useRef<Swipeable | null>(null); // Track the currently open swipeable row
-
-  // Close the previous row when a new row is swiped
-  const handleSwipeOpen = (swipeableRef: Swipeable | null) => {
-    if (currentlyOpenRow.current && currentlyOpenRow.current !== swipeableRef) {
-      currentlyOpenRow.current.close(); // Close the previously opened row
-    }
-    currentlyOpenRow.current = swipeableRef; // Set the new open row
-  };
+  const { handleSwipeOpen } = useSwipeableRow();
 
   return (
     <FlatList
@@ -37,7 +29,11 @@ export default function SwipeableList<TDataItem extends DataItem>({
         itemVisiblePercentThreshold: 50,
       }}
       ListHeaderComponent={
-        <SwipeableListHeader onChangeFilter={handleFilterChange} />
+        <SwipeableListHeader
+          testID='FlatList.ListHeaderComponent'
+          onChangeFilter={handleFilterChange}
+          key={'FlatList.ListHeaderComponent'}
+        />
       }
       ItemSeparatorComponent={Separator}
       showsHorizontalScrollIndicator={false}
@@ -46,6 +42,7 @@ export default function SwipeableList<TDataItem extends DataItem>({
       updateCellsBatchingPeriod={8}
       renderItem={({ item }) => (
         <SwipeableRow
+          key={`SwipeableRow ${item.id}`}
           item={item}
           onEdit={() => {
             handleItemEdit(item);
@@ -58,7 +55,7 @@ export default function SwipeableList<TDataItem extends DataItem>({
           rowItemHeight={rowItemHeight}
         />
       )}
-      keyExtractor={(_item) => `${_item.id}`}
+      keyExtractor={(_item) => `SwipeableRow ${_item.id}`}
     />
   );
 }

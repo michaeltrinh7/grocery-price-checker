@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, TextInput } from 'react-native';
 
 export default function SwipeableListHeader({
+  testID,
   onChangeFilter,
 }: {
+  testID?: string | undefined;
   onChangeFilter: (text: string) => void;
 }) {
   const [filter, setFilter] = useState('');
@@ -17,6 +19,7 @@ export default function SwipeableListHeader({
         marginVertical: 5,
         borderRadius: 10,
       }}
+      testID={testID}
     >
       <TextInput
         autoCapitalize='none'

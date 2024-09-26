@@ -10,15 +10,17 @@
     "lint": "eslint . --ignore-pattern '!coverage/'",
     "lint-fix": "eslint . --fix",
     "test-watch-all": "jest --watchAll",
-    "test": "jest",
-    "test-one": "jest  src/components/Swipeable/SwipeableRow.test.tsx"
+    "test": "jest --env=jsdom",
+    "test-one": "jest  src/components/Swipeable/SwipeableRow/SwipeableRow.test.tsx  --env=jsdom"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native-stack": "^6.11.0",
     "@react-navigation/stack": "^6.4.1",
-    "expo": "~51.0.28",
+    "@testing-library/react": "^16.0.1",
+    "expo": "^51.0.34",
+    "expo-sqlite": "~14.0.6",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
